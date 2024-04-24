@@ -10,7 +10,7 @@ public class BookingSteps {
 	
 	
 	@Given("User is able to get Booking using GET Request")
-	public void i_create_an_account_of_type(String AccountType) throws Exception {
+	public void i_create_an_account_of_type() throws Exception {
 		//RestAssured.baseURI=("https://restful-booker.herokuapp.com");
 		//RestAssured.basePath = ("/booking/1");
 		
