@@ -1,5 +1,7 @@
 package stepdefs;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import org.eclipse.jetty.http.HttpStatus;
 
 import endpoints.BookingEndPoints;
@@ -22,6 +24,13 @@ public class BookingSteps {
 	BookingEndPoints bookingEndPoints;
 	Booking booking;
 	
+	/**
+	 * 
+	 * @param bookingID
+	 * @throws Exception
+	 * 
+	 */
+	
 	@Then("User is able to get Booking with ID <{string}> using GET Request")
 	public void getBooking_Using_GET(String bookingID) throws Exception {
 		//RestAssured.baseURI=("https://restful-booker.herokuapp.com");
@@ -41,7 +50,7 @@ public class BookingSteps {
 		
 		Response res = bookingEndPoints.getBookingByID(bookingID);
 		bookingEndPoints.verifyResponseStatusCode(res,200);
-		
+		bookingEndPoints.validateGETByIDResponseBody("Mary", "Smith", 662, false, "2015-12-14", "2023-11-16");
 	}
 	
 	@Given("Booking API is active")
@@ -56,7 +65,7 @@ public class BookingSteps {
 	public void iCreateNewBooking() {
 		booking = new Booking();
 		System.out.println(booking.getFirstname());
-		bookingEndPoints.addBooking( booking);
+		Response res = bookingEndPoints.addBooking( booking);
 	}
 	
 	@Then("I see response has {int} status code")
