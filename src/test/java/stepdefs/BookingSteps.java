@@ -1,28 +1,20 @@
 package stepdefs;
 
-import static org.hamcrest.Matchers.equalTo;
-
-import org.eclipse.jetty.http.HttpStatus;
-
 import endpoints.BookingEndPoints;
-import endpoints.Routes;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import model.Booking;
 import net.serenitybdd.annotations.Steps;
-import net.serenitybdd.rest.SerenityRest;
-import utilities.Constants;
 
 public class BookingSteps {
 	
 	@Steps
 	BookingEndPoints bookingEndPoints;
 	Booking booking;
+	Response res;
 	
 	/**
 	 * 
@@ -47,32 +39,33 @@ public class BookingSteps {
 		 * 
 		 * res.then().log().all();
 		 */
-		
-		Response res = bookingEndPoints.getBookingByID(bookingID);
+		res = bookingEndPoints.getBookingByID(bookingID);
+		bookingEndPoints.printReponseOnConsole(res);
 		bookingEndPoints.verifyResponseStatusCode(res,200);
-		bookingEndPoints.validateGETByIDResponseBody("Mary", "Smith", 662, false, "2015-12-14", "2023-11-16");
+		bookingEndPoints.validateGETByIDResponseBody("Eric", "Wilson", 736, true, "2020-05-23", "2022-10-24");
 	}
 	
 	@Given("Booking API is active")
 	public void booking_API_is_available() {
-		RequestSpecification rSpec = bookingEndPoints.getCommonSpec(Routes.BOOKING_BASE_URL).basePath("ping");
-		Response res = bookingEndPoints.sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);
+		res = bookingEndPoints.checkBookingAPIAvailable();
 		bookingEndPoints.verifyResponseStatusCode(res,201);
-		
 	}
 	
 	@When("I POST a create booking")
 	public void iCreateNewBooking() {
 		booking = new Booking();
-		System.out.println(booking.getFirstname());
-		Response res = bookingEndPoints.addBooking( booking);
+		res = bookingEndPoints.addBooking( booking);
 	}
 	
 	@Then("I see response has {int} status code")
 	public void iSeeResponseStatusCode(int code) {
-		//bookingEndPoints.verifyResponseStatusCode(world.getResponse(), code);
-		System.out.println("Printing for Booking Steps"+this);
-		System.out.println(booking.getFirstname());
+		bookingEndPoints.verifyResponseStatusCode(res, code);
+	}
+	
+	@And("I verify booking request response as per booking model")
+	public void verifyBookingRequestAsPerBookingModel() {
+		bookingEndPoints.verifyResponseMatchedByModel(res, booking);
+		res.then().log().all();
 	}
 
 }

@@ -13,12 +13,8 @@ import utilities.PropertyLoader;
 
 public class BaseEndPoints {
 	@Steps
-	PropertyLoader property;
-	
-	
+	PropertyLoader property;	
 	private static String authToken;
-	
-	
 
 	/**
 	 *  common specification for request
@@ -64,7 +60,7 @@ public class BaseEndPoints {
 	 * sending the request
 	 */
 	public void verifyResponseStatusCode(Response response, int expectedCode) {
-		Assert.assertEquals(response.getStatusCode(), expectedCode);
+		Assert.assertEquals(expectedCode,response.getStatusCode());
 	}
 
 	/**
@@ -121,5 +117,23 @@ public class BaseEndPoints {
 		}
 		return response;
 	}
-
+	
+	/**
+	 * Print Response on Console
+	 * @param res
+	 */
+	public void printReponseOnConsole(Response res) {
+		res.then().log().all();
+		
+	}
+	
+	/**
+	 * This method is used to compare Response vs Pojo/Model class Object
+	 * @param <T> Used Generics Here to handle any Object Model
+	 * @param res Response
+	 * @param expectedModelObj
+	 */
+	public <T> void verifyResponseMatchedByModel(Response res, T expectedModelObj) {
+		expectedModelObj.equals(res.body().asString());
+	}
 }

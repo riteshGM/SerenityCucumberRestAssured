@@ -44,5 +44,10 @@ public class BookingEndPoints extends BaseEndPoints {
 		
 	}
 	
+	public Response checkBookingAPIAvailable() {
+		RequestSpecification rSpec = getCommonSpec(Routes.BOOKING_BASE_URL).basePath("ping");
+		return sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);	
+	}
+	
 
 }
