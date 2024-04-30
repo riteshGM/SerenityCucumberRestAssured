@@ -13,7 +13,7 @@ import utilities.PropertyLoader;
 
 public class BaseEndPoints {
 	@Steps
-	PropertyLoader property;	
+	PropertyLoader property; //This will Trigger Property Instance Creation - Makes Constructor call to PropertyLoader()	
 	private static String authToken;
 
 	/**

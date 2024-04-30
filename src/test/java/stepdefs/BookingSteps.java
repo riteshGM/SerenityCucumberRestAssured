@@ -1,6 +1,13 @@
 package stepdefs;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+
 import endpoints.BookingEndPoints;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,9 +20,10 @@ public class BookingSteps {
 	
 	@Steps
 	BookingEndPoints bookingEndPoints;
+	
 	Booking booking;
 	Response res;
-	
+	List<Response> responseList  = new ArrayList<Response>();
 	/**
 	 * 
 	 * @param bookingID
@@ -66,6 +74,41 @@ public class BookingSteps {
 	public void verifyBookingRequestAsPerBookingModel() {
 		bookingEndPoints.verifyResponseMatchedByModel(res, booking);
 		res.then().log().all();
+	}
+	
+	@When("I POST a create booking API for multiple customers")
+	public void createPOSTforMultipleCustomers(DataTable dt) {
+		List<Map<String,String>> dataList = dt.asMaps(String.class, String.class);
+		//Reading Each Row from Data Table
+		for(Map<String,String> eachRowAsDataMap : dataList) {
+			Booking eachBooking = new Booking(
+					eachRowAsDataMap.get("firstname"),
+					eachRowAsDataMap.get("lastname"),
+					Integer.parseInt(eachRowAsDataMap.get("totalprice")),
+					Boolean.parseBoolean(eachRowAsDataMap.get("depositpaid")),
+					null,
+					eachRowAsDataMap.get("additionalneeds")
+					);
+		//Making Post Call for Each Data Row Since API Only Supports 1 Booking POST Request at a time
+			Response res = bookingEndPoints.addBooking(eachBooking);
+			res.then().log().all();
+			//Saving Response to List for Each POST Request Made
+			responseList.add(res);
+		}//For Ends Here
+	}
+	
+	@Then("the response for all bookings made has following response code respectively")
+	public void validateResponseCodeforEachBooking(DataTable dt) {
+		List<String> dataList = dt.asList(String.class);
+		if(responseList.size()==dataList.size()-1) {
+			//Since we need to loop through two Lists Simultaneously
+			for(int i = 1; i< dataList.size(); i++) {
+				bookingEndPoints.verifyResponseStatusCode(responseList.get(i-1), Integer.parseInt(dataList.get(i)));
+			}
+		}else {
+			//Shared Less Number of Status Code to Check as Compared to Bookings Created
+			Assert.assertTrue("Number of Status Codes Supplied In Step Did Not Match Number of Bookings Posted",responseList.size()==dataList.size()-1);
+		}
 	}
 
 }
