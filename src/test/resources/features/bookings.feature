@@ -25,7 +25,7 @@ Feature: Booking API
       |  200 |
       | 200	 |
       
-    @Dev
+    @Dev @ALL
     Scenario: Delete a booking
     Given Booking API is active
     When I POST a create booking

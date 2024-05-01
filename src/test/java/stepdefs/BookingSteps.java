@@ -49,7 +49,7 @@ public class BookingSteps {
 		res = bookingEndPoints.getBookingByID(bookingID);
 		bookingEndPoints.printReponseOnConsole(res);
 		bookingEndPoints.verifyResponseStatusCode(res,200);
-		bookingEndPoints.validateGETByIDResponseBody("Eric", "Wilson", 736, true, "2020-05-23", "2022-10-24");
+		bookingEndPoints.validateGETByIDResponseBody("Mary", "Smith", 144, true, "2023-12-18", "2024-04-30");
 	}
 	
 	@Given("Booking API is active")
