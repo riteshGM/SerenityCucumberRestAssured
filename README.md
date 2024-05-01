@@ -1,3 +1,12 @@
+#To Run Serenity Report for Specified Tags
+mvn clean verify -Dcucumber.options="--tags @Dev" -Dtags=Dev
+
+#To Run Serenity Based on Tags in TestRunner.java - this will show all scenarios run and not run
+mvn clean serenity:aggregate verify
+
+#to just run
+mvn clean verify
+
 # RestAssured with Cucumber - Serenity
 
 [![RestAssured-Cucumber-Serenity](https://github.com/ghoshasish99/SerenityRestAssured/actions/workflows/maven.yml/badge.svg)](https://github.com/ghoshasish99/SerenityRestAssured/actions/workflows/maven.yml)

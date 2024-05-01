@@ -50,7 +50,7 @@ public class BaseEndPoints {
 			Response response = sendRequest(rspec, Constants.RequestType.POST_REQUEST, null);
 			authToken = response.jsonPath().getString("token");
 		}
-
+		System.out.println("Auth Token Retrieved "+authToken);
 		return authToken;
 	}
 

@@ -3,9 +3,7 @@ package stepdefs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Assert;
-
 import endpoints.BookingEndPoints;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -24,6 +22,7 @@ public class BookingSteps {
 	Booking booking;
 	Response res;
 	List<Response> responseList  = new ArrayList<Response>();
+	int bookingID;
 	/**
 	 * 
 	 * @param bookingID
@@ -63,6 +62,9 @@ public class BookingSteps {
 	public void iCreateNewBooking() {
 		booking = new Booking();
 		res = bookingEndPoints.addBooking( booking);
+		res.then().log().all();
+		bookingID = res.jsonPath().getInt("bookingid");
+		System.out.println("Booking ID Created as "+bookingID);
 	}
 	
 	@Then("I see response has {int} status code")
@@ -109,6 +111,18 @@ public class BookingSteps {
 			//Shared Less Number of Status Code to Check as Compared to Bookings Created
 			Assert.assertTrue("Number of Status Codes Supplied In Step Did Not Match Number of Bookings Posted",responseList.size()==dataList.size()-1);
 		}
+	}
+	
+	@When("I DELETE a booking")
+	public void deleteBooking() {
+		System.out.println("Delete Booking Started");
+		res = bookingEndPoints.deleteBookingById(bookingID);
+	}
+	
+	@When("getting the same booking with Id")
+	public void gettingTheSameBookingWithId() {
+		System.out.println("Get Same Booking by ID Started");
+		res = bookingEndPoints.getBookingByID(""+bookingID+"");
 	}
 
 }

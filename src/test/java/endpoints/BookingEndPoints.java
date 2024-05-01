@@ -14,6 +14,7 @@ public class BookingEndPoints extends BaseEndPoints {
 	public final String BOOKING_BASE_URI = Routes.BOOKING_BASE_URL;
 	public final String BOOKING_BASE_PATH = "booking";
 	public final String GET_BOOKING_BY_ID = BOOKING_BASE_PATH+"/{bookingID}";
+	public final String DELETE_BOOKING_BY_ID = BOOKING_BASE_PATH+"/{bookingID}";
 
 	public String getPath() {
 		return BOOKING_BASE_PATH;
@@ -29,9 +30,13 @@ public class BookingEndPoints extends BaseEndPoints {
 	}
 	
 	public Response getBookingByID(String bookingID) {
+		System.out.println("Get Booking by ID Started");
 		RequestSpecification rSpec = getCommonSpec(Routes.BOOKING_BASE_URL).basePath(GET_BOOKING_BY_ID);
 		rSpec.pathParam("bookingID", bookingID);
-		return sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);
+		Response res = sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);
+		System.out.println(res.statusCode());
+		res.then().log().all();
+		return res;
 	}
 	
 	public void validateGETByIDResponseBody(String firstName, String lastName, int totalPrice, boolean depositPaid, String checkDate, String checkoutDate) {
@@ -47,6 +52,14 @@ public class BookingEndPoints extends BaseEndPoints {
 	public Response checkBookingAPIAvailable() {
 		RequestSpecification rSpec = getCommonSpec(Routes.BOOKING_BASE_URL).basePath("ping");
 		return sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);	
+	}
+	
+	public Response deleteBookingById(int bookingID) {
+		RequestSpecification rSpec = getCommonSpec(BOOKING_BASE_URI).cookie("token", getAuthorizationToken(BOOKING_BASE_URI)).basePath(GET_BOOKING_BY_ID);
+		rSpec.pathParam("bookingID", bookingID);
+		Response res = sendRequest(rSpec, Constants.RequestType.DELETE_REQUEST, null);
+		res.then().log().all();
+		return res;
 	}
 	
 

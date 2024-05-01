@@ -33,13 +33,6 @@ public class Routes {
 	
 	
 	/**
-	 * 
-	 */
-	
-	//GET Booking
-	public static String BOOKING_GET_URL = BOOKING_BASE_URL+"/booking/{booking_id}";
-	
-	/**
 	 * Further we can this way add as as may module URL's as needed in this class
 	 */
 
