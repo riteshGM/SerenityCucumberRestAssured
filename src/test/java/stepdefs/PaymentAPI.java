@@ -3,8 +3,6 @@ package stepdefs;
 
 import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
