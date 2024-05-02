@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features= {"src/test/resources/features"},
 glue = {"stepdefs"},
-tags = "@ALL"
+tags = "@Dev"
 )
 
 public class TestRunner {

@@ -15,6 +15,7 @@ public class BookingEndPoints extends BaseEndPoints {
 	public final String BOOKING_BASE_PATH = "booking";
 	public final String GET_BOOKING_BY_ID = BOOKING_BASE_PATH+"/{bookingID}";
 	public final String DELETE_BOOKING_BY_ID = BOOKING_BASE_PATH+"/{bookingID}";
+	public final String UPDATE_BOOKING_BY_ID = BOOKING_BASE_PATH+"/{bookingID}";
 
 	public String getPath() {
 		return BOOKING_BASE_PATH;
@@ -25,17 +26,16 @@ public class BookingEndPoints extends BaseEndPoints {
 	}
 	
 	public Response addBooking(Booking booking) throws JSONException {
-		RequestSpecification rSpec = getCommonSpec(BOOKING_BASE_URI).basePath(BOOKING_BASE_PATH);	
-		return sendRequest(rSpec, Constants.RequestType.POST_REQUEST, booking);
+		RequestSpecification rSpec = getCommonSpec(BOOKING_BASE_URI).basePath(BOOKING_BASE_PATH);
+		Response res = sendRequest(rSpec, Constants.RequestType.POST_REQUEST, booking);
+		res.then().log().all();
+		return res;
 	}
 	
 	public Response getBookingByID(String bookingID) {
-		System.out.println("Get Booking by ID Started");
 		RequestSpecification rSpec = getCommonSpec(Routes.BOOKING_BASE_URL).basePath(GET_BOOKING_BY_ID);
 		rSpec.pathParam("bookingID", bookingID);
 		Response res = sendRequest(rSpec, Constants.RequestType.GET_REQUEST, null);
-		System.out.println(res.statusCode());
-		res.then().log().all();
 		return res;
 	}
 	
@@ -46,7 +46,6 @@ public class BookingEndPoints extends BaseEndPoints {
 		SerenityRest.restAssuredThat(lastResponse -> lastResponse.body("'depositpaid'", equalTo(depositPaid)));
 		SerenityRest.restAssuredThat(lastResponse -> lastResponse.body("'bookingdates'.'checkin'", equalTo(checkDate)));
 		SerenityRest.restAssuredThat(lastResponse -> lastResponse.body("'bookingdates'.'checkout'", equalTo(checkoutDate)));
-		
 	}
 	
 	public Response checkBookingAPIAvailable() {
@@ -62,5 +61,18 @@ public class BookingEndPoints extends BaseEndPoints {
 		return res;
 	}
 	
-
+	public int getBookingIDFromResponse(Response res) {
+		return res.jsonPath().getInt("bookingid");
+	}
+	
+	public Response updateBooking(int bookingID, Booking booking) {
+		//Prepare Your Request Part
+		RequestSpecification rSpec = getCommonSpec(BOOKING_BASE_URI);
+		rSpec.cookie("token", getAuthorizationToken(BOOKING_BASE_URI));
+		rSpec.basePath(UPDATE_BOOKING_BY_ID);
+		rSpec.pathParam("bookingID", bookingID);
+		Response res = sendRequest(rSpec, Constants.RequestType.PUT_REQUEST, booking);
+		res.then().log().all();
+		return res;
+	}
 }

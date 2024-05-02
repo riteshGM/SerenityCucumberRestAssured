@@ -62,8 +62,8 @@ public class BookingSteps {
 	public void iCreateNewBooking() {
 		booking = new Booking();
 		res = bookingEndPoints.addBooking( booking);
-		res.then().log().all();
-		bookingID = res.jsonPath().getInt("bookingid");
+		
+		bookingID = bookingEndPoints.getBookingIDFromResponse(res);
 		System.out.println("Booking ID Created as "+bookingID);
 	}
 	
@@ -115,14 +115,26 @@ public class BookingSteps {
 	
 	@When("I DELETE a booking")
 	public void deleteBooking() {
-		System.out.println("Delete Booking Started");
 		res = bookingEndPoints.deleteBookingById(bookingID);
 	}
 	
 	@When("getting the same booking with Id")
 	public void gettingTheSameBookingWithId() {
-		System.out.println("Get Same Booking by ID Started");
 		res = bookingEndPoints.getBookingByID(""+bookingID+"");
+	}
+	
+	@When("I UPDATE a booking")
+	public void updateBooking(DataTable dt) {
+		List<List<String>> updateInfoList = dt.asLists(String.class);
+		booking = new Booking();
+		res = bookingEndPoints.addBooking(booking);
+		bookingID = bookingEndPoints.getBookingIDFromResponse(res);
+		//Creation Booking Payload for UPDATE REQUEST
+		Booking updatedBookingPayload = new Booking(updateInfoList.get(0).get(0), 
+				updateInfoList.get(0).get(1), Integer.parseInt(updateInfoList.get(0).get(2)),
+				Boolean.parseBoolean(updateInfoList.get(0).get(3)), null, updateInfoList.get(0).get(4));
+		//Make Update Booking Call
+		bookingEndPoints.updateBooking(bookingID, updatedBookingPayload);
 	}
 
 }
