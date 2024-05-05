@@ -1,7 +1,7 @@
 Feature: Booking API
   Booking API Functionalities
   
-  @GET_Request @ALL @Dev
+  @GET_Request @ALL
   Scenario: Get Booking Request Validation
   	Given Booking API is active
     Then User is able to get Booking with ID <"2"> using GET Request
@@ -34,7 +34,7 @@ Feature: Booking API
     When getting the same booking with Id
     Then I see response has 404 status code
     
-    @Dev
+    @All
     Scenario Outline: Update a booking in the API
     Given Booking API is active
     When I UPDATE a booking
@@ -44,4 +44,11 @@ Feature: Booking API
     Examples: 
      | code |
      | 200  |
+     
+  @ALL @Dev
+  Scenario: Validate Rate Limiting
+  	Given Booking API is active
+    Then User is able to get Booking with ID <2> using GET Request <1000> times
+     
+     
     

@@ -136,5 +136,16 @@ public class BookingSteps {
 		//Make Update Booking Call
 		bookingEndPoints.updateBooking(bookingID, updatedBookingPayload);
 	}
+	
+	@When("User is able to get Booking with ID <{int}> using GET Request <{int}> times")
+	public void makeGetRequestInLoop(int bookingID, int triggerCount) {
+		for(int i =1; i <=triggerCount; i++) {
+			System.out.println("Making Request Run#"+i);
+			res =bookingEndPoints.getBookingByID(""+bookingID+"");
+			System.out.println("Response CODE Found"+res.getStatusCode());
+			bookingEndPoints.verifyResponseStatusCode(res,200);
+		}
+		
+	}
 
 }
